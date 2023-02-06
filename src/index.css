@@ -1,0 +1,17 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body,html{
+font-size: clamp(0.875rem, 0.7391rem + 0.2174vw, 1rem);
+box-sizing: border-box;
+
+}
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+
+}
