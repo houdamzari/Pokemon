@@ -9,7 +9,7 @@ import {
   FilterBar,
 } from "../components";
 
-function HomePage(props) {
+function HomePage({ pokemonDetails }) {
   const [pokemon, setPokemon] = useState([]);
   // const [loading, setLoading] = useState(true);
   // const [nextLink, setNextLink] = useState([]);
@@ -18,30 +18,29 @@ function HomePage(props) {
   const [pokeTypes, setPokeTypes] = useState([]);
   const [pokeAbility, setPokeAbility] = useState([]);
   const [pokeSpecie, setPokeSpecie] = useState([]);
-  const [url, setUrl] = useState(`https://pokeapi.co/api/v2/pokemon?limit=30`);
   const [searchString, setSearchString] = useState([]);
   const [state, setState] = useState({});
   const [pokeSpecies, setPokeSpecies] = useState([]);
   const [type, setType] = useState();
   const [species, setSpecies] = useState();
   const [ability, setAbility] = useState();
-  const getUrl = async () => {
-    const data = await axios.get(url).then(({ data }) => {
-      setPokeUrl(data.results.map((item) => item.url));
-    });
-  };
+  // const getUrl = async () => {
+  //   const data = await axios.get(url).then(({ data }) => {
+  //     setPokeUrl(data.results.map((item) => item.url));
+  //   });
+  // };
 
-  useEffect(() => {
-    const getPokemon = async () => {
-      const data = await axios.get(url).then(({ data }) => {
-        // setPrevLink(data.previous);
-        // setNextLink(data.next);
-        setPokemon(data.results.map((item) => item));
-        getUrl();
-      });
-    };
-    getPokemon();
-  }, []);
+  // useEffect(() => {
+  //   const getPokemon = async () => {
+  //     const data = await axios.get(url).then(({ data }) => {
+  //       // setPrevLink(data.previous);
+  //       // setNextLink(data.next);
+  //       setPokemon(data.results.map((item) => item));
+  //       getUrl();
+  //     });
+  //   };
+  //   getPokemon();
+  // }, []);
 
   // const goToNextPage = () => {
   //   setUrl(nextLink);
@@ -62,8 +61,7 @@ function HomePage(props) {
 
   const searchPokemon = (string) => {
     const searchData = pokemon.filter((item) => item.name.includes(string));
-    // console.log(string);
-    // console.log(searchData);
+
     setSearchString(searchData);
   };
   const getAllTypes = () => {
@@ -81,26 +79,12 @@ function HomePage(props) {
       .get("https://pokeapi.co/api/v2/pokemon-species")
       .then(({ data }) => setPokeSpecie(data.results));
   };
-  // const getSinglePokemon = async () => {
-  //   const test = pokeUrl.map(
-  //     async (p) => await axios.get(p).then(({ data }) => setSinglePokemon(data))
-  //   );
-  //   // const test = axios.get(pokeUrl).then(({ data }) => {
-  //   //   data.map((p) => {
-  //   //     return p;
-  //   //   });
-  //   // });
-  // };
 
   useEffect(() => {
     getAllTypes();
     getAllAbilities();
     getAllSpecies();
   }, []);
-  // useEffect(() => {
-  //   getSinglePokemon();
-  //   console.log(singlePokemon);
-  // }, [pokeUrl]);
 
   return (
     <>
@@ -121,7 +105,8 @@ function HomePage(props) {
           <Spacer size={50} />
 
           <Grid
-            url={url}
+            // url={url}
+            pokemonDetails={pokemonDetails}
             setState={setState}
             pokemon={searchString.length > 0 ? searchString : pokemon}
             pokeUrl={pokeUrl}

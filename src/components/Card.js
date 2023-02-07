@@ -2,17 +2,17 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { getTypeStyle } from "../utilities/useColor";
 function Card({ url, p, setState, searchString, type, ability, species }) {
-  const [singleData, setSingleData] = useState({});
+  // const [p, setp] = useState({});
 
-  useEffect(() => {
-    const getSinglePokemon = async () => {
-      await axios.get(p.url).then(({ data }) => setSingleData(data));
-    };
-    getSinglePokemon();
-  }, [searchString]);
-  const abilities = singleData?.abilities?.map((a) => a.ability.name);
-  const types = singleData?.types?.map((t) => t.type.name);
-  const specie = singleData?.species?.name;
+  // useEffect(() => {
+  //   const getSinglePokemon = async () => {
+  //     await axios.get(p.url).then(({ data }) => setp(data));
+  //   };
+  //   getSinglePokemon();
+  // }, [searchString]);
+  const abilities = p?.abilities?.map((a) => a.ability.name);
+  const types = p?.types?.map((t) => t.type.name);
+  const specie = p?.species?.name;
   const showCard = () => {
     return (
       (type?.length > 0 && types?.includes(type)) ||
@@ -28,26 +28,27 @@ function Card({ url, p, setState, searchString, type, ability, species }) {
       (specie && !(species === specie))
     );
   };
+
   return (
     <>
       {showCard() ? (
         <button
           className="w-64 h-44 rounded-lg bg-white shadow-xl flex justify-center flex-col items-center gap-4 relative pt-10 "
           onClick={() => {
-            setState(singleData);
+            setState(p);
           }}
         >
           <img
             className="w-32 h-30 rounded-full absolute -top-16 "
-            src={singleData?.sprites?.front_default}
+            src={p?.sprites?.front_default}
             alt="pokemon"
           />
 
-          <span>N : {singleData.order} </span>
-          <h1 className="text-md font-bold">{singleData.name} </h1>
+          <span>N : {p.order} </span>
+          <h1 className="text-md font-bold">{p.name} </h1>
           <div className="flex flex-row gap-2">
-            {singleData.types &&
-              singleData.types.map((type) => {
+            {p.types &&
+              p.types.map((type) => {
                 return (
                   <div
                     style={getTypeStyle(type.type.name)}
@@ -64,20 +65,20 @@ function Card({ url, p, setState, searchString, type, ability, species }) {
         <button
           className="w-64 h-44 rounded-lg bg-white shadow-xl flex justify-center flex-col items-center gap-4 relative pt-10 "
           onClick={() => {
-            setState(singleData);
+            setState(p);
           }}
         >
           <img
             className="w-32 h-30 rounded-full absolute -top-16 "
-            src={singleData?.sprites?.front_default}
+            src={p?.sprites?.front_default}
             alt="pokemon"
           />
 
-          <span>N : {singleData.order} </span>
-          <h1 className="text-md font-bold">{singleData.name} </h1>
+          <span>N : {p.order} </span>
+          <h1 className="text-md font-bold">{p.name} </h1>
           <div className="flex flex-row gap-2">
-            {singleData.types &&
-              singleData.types.map((type) => {
+            {p.types &&
+              p.types.map((type) => {
                 return (
                   <div
                     style={getTypeStyle(type.type.name)}
