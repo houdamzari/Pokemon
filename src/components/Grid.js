@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-
 import { Card } from ".";
 
 function Grid({

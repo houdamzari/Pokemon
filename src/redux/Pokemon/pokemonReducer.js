@@ -5,7 +5,7 @@ export const fetchPokemonData = createAsyncThunk(
   "pokemon/fetchPokemon",
   async () => {
     const Pokemon = await axios.get(
-      "https://pokeapi.co/api/v2/pokemon?limit=150"
+      "https://pokeapi.co/api/v2/pokemon?limit=20"
     );
     return Pokemon.data.results;
   }
@@ -21,13 +21,17 @@ export const fetchSinglePokemonData = createAsyncThunk(
 const initialState = {
   pokemons: [],
   pokemonDetails: [],
+  filteredPokemons: [],
 };
 const pokemonReducer = createSlice({
   name: "pokemon",
   initialState,
   reducers: {
-    SEARCH_POKEMON() {
-      console.log("pokemon");
+    SEARCH_POKEMON(state, action) {
+      const searchData = state.pokemonDetails.filter((item) =>
+        item.name.includes(action.payload)
+      );
+      return { ...state, filteredPokemons: searchData };
     },
   },
   extraReducers: (builder) => {
@@ -44,3 +48,4 @@ const pokemonReducer = createSlice({
   },
 });
 export default pokemonReducer;
+export const { SEARCH_POKEMON } = pokemonReducer.actions;

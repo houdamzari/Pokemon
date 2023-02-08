@@ -23,7 +23,7 @@ function App() {
     if (pokemons && Array.isArray(pokemons)) {
       pokemons.map((pokemon) => dispatch(fetchSinglePokemonData(pokemon.url)));
     }
-    setTimeout(() => setIsLoading(false), 6000);
+    setTimeout(() => setIsLoading(false), 1000);
   }, [pokemons]);
   return (
     <>
