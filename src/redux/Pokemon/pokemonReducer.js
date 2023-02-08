@@ -5,29 +5,33 @@ export const fetchPokemonData = createAsyncThunk(
   "pokemon/fetchPokemon",
   async () => {
     const Pokemon = await axios.get(
-      "https://pokeapi.co/api/v2/pokemon?limit=30"
+      "https://pokeapi.co/api/v2/pokemon?limit=20"
     );
     return Pokemon.data.results;
-    // .then(({ data }) => data.results)
-    // .then((res) => res.map((item) => (poke = item)));
   }
 );
 export const fetchSinglePokemonData = createAsyncThunk(
   "pokemon/fetchSinglePokemon",
   async (url) => {
-    await axios.get(url).then(({ data }) => console.log(data));
+    const res = await axios.get(url).then(({ data }) => data);
+    return res;
   }
 );
 
 const initialState = {
   pokemons: [],
+  pokemonDetails: [],
+  filteredPokemons: [],
 };
 const pokemonReducer = createSlice({
   name: "pokemon",
   initialState,
   reducers: {
-    SEARCH_POKEMON() {
-      console.log("pokemon");
+    SEARCH_POKEMON(state, action) {
+      const searchData = state.pokemonDetails.filter((item) =>
+        item.name.includes(action.payload)
+      );
+      return { ...state, filteredPokemons: searchData };
     },
   },
   extraReducers: (builder) => {
@@ -37,8 +41,11 @@ const pokemonReducer = createSlice({
     });
     builder.addCase(fetchSinglePokemonData.fulfilled, (state, action) => {
       state.loading = false;
-      state.pokemons = action.payload;
+      if (!state.pokemonDetails.some((item) => item.id === action.payload.id)) {
+        state.pokemonDetails.push(action.payload);
+      }
     });
   },
 });
 export default pokemonReducer;
+export const { SEARCH_POKEMON } = pokemonReducer.actions;

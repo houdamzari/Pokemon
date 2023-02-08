@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-
 import { Card } from ".";
 
 function Grid({
@@ -10,14 +9,15 @@ function Grid({
   type,
   ability,
   species,
+  pokemonDetails,
 }) {
   return (
     <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-14 p-10">
-      {pokemon.map((p) => {
+      {pokemonDetails.map((p) => {
         return (
           <Card
             url={url}
-            pokemon={pokemon}
+            pokemonDetails={pokemonDetails}
             p={p}
             setState={setState}
             searchString={searchString}

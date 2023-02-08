@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import {
   Grid,
   Pagination,
@@ -9,46 +10,23 @@ import {
   FilterBar,
 } from "../components";
 
-function HomePage(props) {
+function HomePage({ pokemonDetails }) {
   const [pokemon, setPokemon] = useState([]);
-  // const [loading, setLoading] = useState(true);
-  // const [nextLink, setNextLink] = useState([]);
-  // const [prevLink, setPrevLink] = useState([]);
   const [pokeUrl, setPokeUrl] = useState([]);
   const [pokeTypes, setPokeTypes] = useState([]);
   const [pokeAbility, setPokeAbility] = useState([]);
   const [pokeSpecie, setPokeSpecie] = useState([]);
-  const [url, setUrl] = useState(`https://pokeapi.co/api/v2/pokemon?limit=30`);
-  const [searchString, setSearchString] = useState([]);
   const [state, setState] = useState({});
   const [pokeSpecies, setPokeSpecies] = useState([]);
   const [type, setType] = useState();
   const [species, setSpecies] = useState();
   const [ability, setAbility] = useState();
-  const getUrl = async () => {
-    const data = await axios.get(url).then(({ data }) => {
-      setPokeUrl(data.results.map((item) => item.url));
-    });
-  };
+  const [searchString, setSearchString] = useState([]);
 
-  useEffect(() => {
-    const getPokemon = async () => {
-      const data = await axios.get(url).then(({ data }) => {
-        // setPrevLink(data.previous);
-        // setNextLink(data.next);
-        setPokemon(data.results.map((item) => item));
-        getUrl();
-      });
-    };
-    getPokemon();
-  }, []);
+  const filteredPokemons = useSelector(
+    (state) => state.pokemon.filteredPokemons
+  );
 
-  // const goToNextPage = () => {
-  //   setUrl(nextLink);
-  // };
-  // const goBackToPreviousPage = () => {
-  //   setUrl(prevLink);
-  // };
   const getSpecis = async () => {
     if (state.species) {
       await axios
@@ -62,8 +40,7 @@ function HomePage(props) {
 
   const searchPokemon = (string) => {
     const searchData = pokemon.filter((item) => item.name.includes(string));
-    // console.log(string);
-    // console.log(searchData);
+
     setSearchString(searchData);
   };
   const getAllTypes = () => {
@@ -81,32 +58,19 @@ function HomePage(props) {
       .get("https://pokeapi.co/api/v2/pokemon-species")
       .then(({ data }) => setPokeSpecie(data.results));
   };
-  // const getSinglePokemon = async () => {
-  //   const test = pokeUrl.map(
-  //     async (p) => await axios.get(p).then(({ data }) => setSinglePokemon(data))
-  //   );
-  //   // const test = axios.get(pokeUrl).then(({ data }) => {
-  //   //   data.map((p) => {
-  //   //     return p;
-  //   //   });
-  //   // });
-  // };
 
   useEffect(() => {
     getAllTypes();
     getAllAbilities();
     getAllSpecies();
   }, []);
-  // useEffect(() => {
-  //   getSinglePokemon();
-  //   console.log(singlePokemon);
-  // }, [pokeUrl]);
+  console.log(filteredPokemons);
 
   return (
     <>
       <div className="w-full flex flex-row justify-between gap-100">
         <div>
-          <SearchBar searchPokemon={searchPokemon} />
+          <SearchBar setSearchString={setSearchString} />
 
           <Spacer size={50} />
           <FilterBar
@@ -119,11 +83,12 @@ function HomePage(props) {
             setSpecies={setSpecies}
           />
           <Spacer size={50} />
-
           <Grid
-            url={url}
+            pokemonDetails={
+              filteredPokemons.length > 0 ? filteredPokemons : pokemonDetails
+            }
             setState={setState}
-            pokemon={searchString.length > 0 ? searchString : pokemon}
+            pokemon={searchString.length > 0 ? searchString : pokemonDetails}
             pokeUrl={pokeUrl}
             searchString={searchString}
             type={type}

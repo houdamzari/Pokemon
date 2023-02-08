@@ -9,25 +9,36 @@ import "./tailwind.css";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPokemonData } from "./redux/Pokemon/pokemonReducer";
 import { fetchSinglePokemonData } from "./redux/Pokemon/pokemonReducer";
+import Spinner from "./components/Spinner";
 function App() {
   const dispatch = useDispatch();
-  const { pokemons } = useSelector((state) => state.pokemon);
+  const { pokemons, pokemonDetails } = useSelector((state) => state.pokemon);
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     dispatch(fetchPokemonData());
   }, []);
+
   useEffect(() => {
+    setIsLoading(true);
     if (pokemons && Array.isArray(pokemons)) {
       pokemons.map((pokemon) => dispatch(fetchSinglePokemonData(pokemon.url)));
     }
+    setTimeout(() => setIsLoading(false), 1000);
   }, [pokemons]);
   return (
-    <div
-      style={{ backgroundColor: "#f6f8fc" }}
-      className="flex flex-col justify-center items-center w-full
+    <>
+      {isLoading === false ? (
+        <div
+          style={{ backgroundColor: "#f6f8fc" }}
+          className="flex flex-col justify-center items-center w-full
        py-20 px-10"
-    >
-      <HomePage />
-    </div>
+        >
+          <HomePage pokemonDetails={pokemonDetails} />
+        </div>
+      ) : (
+        <Spinner />
+      )}
+    </>
   );
 }
 
